@@ -17,6 +17,10 @@ export class CommitmentsService {
         return commitment;
     }
 
+    async findCommitment(idUser, from, to) {
+       return  this.commitmentRepository.findCommitment(idUser, from, to);
+    }
+
     async findCommitmentById(id: string) {
         return await this.commitmentRepository.findCommitmentById(id);
     }

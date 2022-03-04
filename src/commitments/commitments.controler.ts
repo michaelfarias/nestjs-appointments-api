@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put, Delete } from "@nestjs/common";
+import { Controller, Post, Body, Get, Param, Put, Delete, Query } from "@nestjs/common";
 import { SendgridService } from "src/sendgrid/sendgrid.service";
 import { CommitmentsService } from './commitments.service';
 import { CreateCommitmentDto } from "./dto/create-commitment.dto";
@@ -28,6 +28,13 @@ export class CommitmentsController {
         // await this.sendgridService.send(mail)
 
         return commitment;
+    }
+    @Get()
+    async findCommitment(
+        @Query("id") idUser, @Query('from') from, @Query("to") to
+    ) {
+        console.log(idUser)
+       return  this.commitmentsService.findCommitment(idUser, from, to);
     }
 
     @Get(':id')
