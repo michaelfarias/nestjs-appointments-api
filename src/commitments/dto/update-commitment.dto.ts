@@ -1,5 +1,5 @@
 export class UpdateCommitmentDto {
-    date: Date;
+    date: string;
 
     description: string;
 

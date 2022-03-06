@@ -7,8 +7,13 @@ export class Commitment extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    date: Date;
+    // @Column()
+    // date: Date;
+    @Column({ type: 'time' })
+    time_only: string;
+
+    @Column({ type: 'date' })
+    date_only: string;
 
     @Column()
     description: string;

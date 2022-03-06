@@ -31,10 +31,9 @@ export class CommitmentsController {
     }
     @Get()
     async findCommitment(
-        @Query("id") idUser, @Query('from') from, @Query("to") to
+        @Query("id") idUser, @Query('from') from, @Query("to") to, @Query("time_to") time_to, @Query("time_from") time_from
     ) {
-        console.log(idUser)
-       return  this.commitmentsService.findCommitment(idUser, from, to);
+        return this.commitmentsService.findCommitment(idUser, from, time_from, to, time_to);
     }
 
     @Get(':id')
