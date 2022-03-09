@@ -57,4 +57,11 @@ export class UsersController {
             message: 'Usuário removido com sucesso.'
         }
     }
+
+    @Put('request_friendship/:id')
+    async requestFriendship(@Param('id') userIdRequester, @Body() user) {
+        const userIdRequested = user.id;
+        console.log(userIdRequester, userIdRequested)
+        return this.usersService.requestFriendship(userIdRequester, userIdRequested);
+    }
 }

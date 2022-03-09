@@ -21,7 +21,7 @@ export class UserRepository extends Repository<User>{
         user.address = address;
         user.password = password;
         user.commitments = commitments;
-        user.friends = friends;
+        // user.friends = friends;
 
         try {
             await user.save();
@@ -73,5 +73,23 @@ export class UserRepository extends Repository<User>{
 
         if (result.affected === 0)
             throw new NotFoundException('Não foi encontrado o usuário com o ID informado');
+    }
+
+    async requestFriendship(userIdRequester, userIdRequested) {
+        let userRequester = await this.findUserById(userIdRequester);
+        const userRequested = await this.findUserById(userIdRequested)
+
+        if (userRequester && userRequested) {
+            console.log(userRequester)
+            if (userRequester.friends_ids == null) {
+                var newArray = [userRequested.id]
+                userRequester.friends_ids = newArray;
+            }
+
+            userRequester.friends_ids.push(userRequested.id);
+            // userRequested.friends
+            await userRequester.save();
+        }
+
     }
 }

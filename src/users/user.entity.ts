@@ -4,8 +4,6 @@ import {
     PrimaryGeneratedColumn,
     Column,
     OneToMany,
-    JoinTable,
-    ManyToMany
 } from 'typeorm';
 import { Commitment } from 'src/commitments/commitment.entity';
 import { Address } from './address';
@@ -36,7 +34,6 @@ export class User extends BaseEntity {
     @OneToMany(type => Commitment, commitment => commitment.user)
     commitments: Commitment[];
 
-    @ManyToMany(type => User)
-    @JoinTable()
-    friends: User[]
+    @Column('int', { array: true, nullable: true })
+    friends_ids: number[]
 }
