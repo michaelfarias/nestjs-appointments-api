@@ -57,12 +57,4 @@ export class UsersService {
     async deleteUser(userId: string) {
         await this.userRepository.deleteUser(userId);
     }
-
-    async requestFriendship(userIdRequester, userIdRequested) {
-        this.userRepository.requestFriendship(userIdRequester, userIdRequested)
-
-        return {
-            message: 'Solicitação de amizade concluída'
-        }
-    }
 }

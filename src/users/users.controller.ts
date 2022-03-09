@@ -1,12 +1,18 @@
-import { Controller, Post, Body, Get, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put, Delete, Query } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FriendsRepository } from 'src/friends/friends.repository';
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService) { }
+    constructor(
+        private usersService: UsersService,
+        @InjectRepository(FriendsRepository)
+        private friendsRepository: FriendsRepository
+    ) { }
     @Post('admin')
     async createAdminUser(
         @Body() createUserDto: CreateUserDto,
@@ -58,10 +64,11 @@ export class UsersController {
         }
     }
 
-    @Put('request_friendship/:id')
-    async requestFriendship(@Param('id') userIdRequester, @Body() user) {
-        const userIdRequested = user.id;
-        console.log(userIdRequester, userIdRequested)
-        return this.usersService.requestFriendship(userIdRequester, userIdRequested);
+    @Get('consult_user_schedule/:id')
+    async consultUserSchedule(@Param('id') id, @Query('userId') userId) {
+        console.log(id, userId);
+        console.log(await this.friendsRepository.findFriedship(id, userId))
+
     }
+
 }

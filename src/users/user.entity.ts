@@ -33,7 +33,4 @@ export class User extends BaseEntity {
 
     @OneToMany(type => Commitment, commitment => commitment.user)
     commitments: Commitment[];
-
-    @Column('int', { array: true, nullable: true })
-    friends_ids: number[]
 }

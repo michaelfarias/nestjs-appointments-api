@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, getRepository } from 'typeorm';
 import { UserRole } from './user-roles.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
@@ -73,23 +73,5 @@ export class UserRepository extends Repository<User>{
 
         if (result.affected === 0)
             throw new NotFoundException('Não foi encontrado o usuário com o ID informado');
-    }
-
-    async requestFriendship(userIdRequester, userIdRequested) {
-        let userRequester = await this.findUserById(userIdRequester);
-        const userRequested = await this.findUserById(userIdRequested)
-
-        if (userRequester && userRequested) {
-            console.log(userRequester)
-            if (userRequester.friends_ids == null) {
-                var newArray = [userRequested.id]
-                userRequester.friends_ids = newArray;
-            }
-
-            userRequester.friends_ids.push(userRequested.id);
-            // userRequested.friends
-            await userRequester.save();
-        }
-
     }
 }
