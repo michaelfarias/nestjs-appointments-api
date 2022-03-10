@@ -1,17 +1,19 @@
-import { Controller, Post, Body, Get, Param, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put, Delete, Query, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendsRepository } from 'src/friends/friends.repository';
+import { CommitmentsService } from 'src/commitments/commitments.service';
 
 @Controller('users')
 export class UsersController {
     constructor(
         private usersService: UsersService,
         @InjectRepository(FriendsRepository)
-        private friendsRepository: FriendsRepository
+        private friendsRepository: FriendsRepository,
+        private commitmentsService: CommitmentsService
     ) { }
     @Post('admin')
     async createAdminUser(
@@ -65,15 +67,18 @@ export class UsersController {
     }
 
     @Get('consult_user_schedule/:id')
-    async consultUserSchedule(@Param('id') id, @Query('userId') userId) {
+    async consultUserSchedule(@Param('id') id, @Query('requestedUserId') requestedUserId) {
 
-        const friends = await this.friendsRepository.findFriedship(id, userId);
+        const friends = await this.friendsRepository.findFriedship(id, requestedUserId);
 
         if (friends) {
 
+            const commitments = this.commitmentsService.findCommitmentsByUserId(requestedUserId)
+
+            return commitments;
         }
 
-        return friends;
+        throw new NotFoundException('Usuários não possuem amizade.')
 
     }
 

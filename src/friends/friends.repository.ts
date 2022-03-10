@@ -17,16 +17,16 @@ export class FriendsRepository extends Repository<Friend>{
         } catch (error) {
             throw new InternalServerErrorException('Erro ao salvar os usuários no banco de dados')
         }
-
-
     }
 
-    async findFriedship(userIdRequester, userIdRequested) {
+    async findFriedship(requesterUserId, requestedUserId) {
 
         const query = await this.createQueryBuilder('friend')
             .select(['friend.requestor_id', 'friend.requested_id'])
-            .where('friend.requestor_id = :id', { id: userIdRequester })
-            .andWhere('friend.requested_id = :idUser', { idUser: userIdRequested })
+            .where('friend.requestor_id = :id', { id: requesterUserId })
+            .andWhere('friend.requested_id = :idUser', { idUser: requestedUserId })
+            .orWhere('friend.requestor_id = :requesterId', { requesterId: requestedUserId })
+            .andWhere('friend.requested_id = :requestedId', { requestedId: requesterUserId })
             .getOne();
 
         return query;

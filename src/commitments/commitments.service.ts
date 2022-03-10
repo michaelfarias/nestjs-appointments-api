@@ -54,4 +54,8 @@ export class CommitmentsService {
             throw new NotFoundException('Não foi possivel deletar o compromisso com ID informado');
     }
 
+
+    async findCommitmentsByUserId(userId) {
+        return await this.commitmentRepository.findCommitmentsByUserId(userId);
+    }
 }

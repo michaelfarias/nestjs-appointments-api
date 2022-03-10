@@ -79,4 +79,12 @@ export class CommitmentRepository extends Repository<Commitment>{
 
         return await this.save(updateCommitmentDto);
     }
+
+    async findCommitmentsByUserId(userId) {
+        const commitments = await this.createQueryBuilder('commitment')
+            .where('commitment.user.id = :id', { id: userId })
+            .getMany();
+
+        return commitments;
+    }
 }
