@@ -66,8 +66,14 @@ export class UsersController {
 
     @Get('consult_user_schedule/:id')
     async consultUserSchedule(@Param('id') id, @Query('userId') userId) {
-        console.log(id, userId);
-        console.log(await this.friendsRepository.findFriedship(id, userId))
+
+        const friends = await this.friendsRepository.findFriedship(id, userId);
+
+        if (friends) {
+
+        }
+
+        return friends;
 
     }
 

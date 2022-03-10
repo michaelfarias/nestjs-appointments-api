@@ -6,10 +6,10 @@ export class Friend extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ nullable: true })
     requestor_id: number;
 
-    @Column()
+    @Column({ nullable: true })
     requested_id: number;
 
 }
