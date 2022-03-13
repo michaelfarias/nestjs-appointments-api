@@ -18,7 +18,15 @@ export class CommitmentRepository extends Repository<Commitment>{
         commitment.place = "Local";
         commitment.email_people_involved = ['alsd@gmail.com', 'laksdla@hotmail.com']
         commitment.user = createCommitmentDto.user;
-        console.log(new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC' }))
+        // console.log(new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC' }))
+        const now = new Date()
+        now.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        now.setDate(now.getDate() - createCommitmentDto.reminder.days_before);
+        now.setHours(now.getHours() - createCommitmentDto.reminder.hours_before);
+        now.setSeconds(0)
+        now.setMilliseconds(0)
+        commitment.reminder = now
+
         try {
             await commitment.save();
 
@@ -73,6 +81,13 @@ export class CommitmentRepository extends Repository<Commitment>{
             throw new InternalServerErrorException('Compromisso não encontrado')
 
         return commitment;
+    }
+
+    async findCommitmentByReminder(reminder) {
+        const query = await this.createQueryBuilder('commitment')
+            .where('commitment.reminder = :reminder', { reminder }).getMany();
+
+        return query;
     }
 
     async updateCommitment(updateCommitmentDto: UpdateCommitmentDto) {

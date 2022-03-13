@@ -21,6 +21,9 @@ export class Commitment extends BaseEntity {
     @Column()
     place: string;
 
+    @Column({ type: 'timestamp', nullable: true })
+    reminder: Date;
+
     @ManyToOne(Type => User, user => user.commitments)
     user: User;
 
