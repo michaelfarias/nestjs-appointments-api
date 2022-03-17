@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { CommitmentsModule } from './commitments/commitments.module';
 import { FriendsModules } from './friends/friends.module';
 import { TaskModule } from './task/task.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -12,7 +14,11 @@ import { TaskModule } from './task/task.module';
     UsersModule,
     CommitmentsModule,
     FriendsModules,
-    TaskModule
+    TaskModule,
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'client'),
+
+    // }),
   ],
   controllers: [],
   providers: [],

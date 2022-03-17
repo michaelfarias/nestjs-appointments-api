@@ -25,7 +25,7 @@ export class CommitmentsController {
             html: '<h1>Hello</h1>'
         };
 
-        // await this.sendgridService.send(mail)
+        await this.sendgridService.send(mail)
 
         return commitment;
     }

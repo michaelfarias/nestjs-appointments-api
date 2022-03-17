@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put, Delete, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put, Delete, Query, NotFoundException, Render } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ReturnUserDto } from './dto/return-user.dto';
@@ -15,6 +15,15 @@ export class UsersController {
         private friendsRepository: FriendsRepository,
         private commitmentsService: CommitmentsService
     ) { }
+
+    @Get('page/')
+    @Render('index')
+    root(@Query() query) {
+        const { name, email } = query;
+
+        return { name, email }
+    }
+
     @Post('admin')
     async createAdminUser(
         @Body() createUserDto: CreateUserDto,
