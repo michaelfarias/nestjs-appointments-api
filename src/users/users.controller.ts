@@ -6,6 +6,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendsRepository } from 'src/friends/friends.repository';
 import { CommitmentsService } from 'src/commitments/commitments.service';
+import { SendgridService } from 'src/sendgrid/sendgrid.service';
 
 @Controller('users')
 export class UsersController {
@@ -13,7 +14,8 @@ export class UsersController {
         private usersService: UsersService,
         @InjectRepository(FriendsRepository)
         private friendsRepository: FriendsRepository,
-        private commitmentsService: CommitmentsService
+        private commitmentsService: CommitmentsService,
+        private readonly sendgridService: SendgridService
     ) { }
 
     @Get('page/')
@@ -36,13 +38,31 @@ export class UsersController {
         }
     }
 
+    @Post('pre_registration')
+    async pre_registration(@Body() createUserDto: CreateUserDto) {
+        const { name, email } = createUserDto;
+
+        const mail = {
+            to: `${email}`,
+            from: 'noreply@application.com',
+            subject: 'Complete Your Registration',
+            text: 'Click on the link',
+            html: `<a href='http://localhost:3000/users/page/pre_registration/?name=${name}&email=${email}'>Finalize registration.</a>`
+        };
+
+        await this.sendgridService.send(mail)
+
+        return {
+            message: "Foi enviado um email com link para finalizar o cadastro"
+        }
+    }
+
     @Post()
     async createUser(
         @Body() createUser: CreateUserDto,
     ): Promise<ReturnUserDto> {
 
         const user = await this.usersService.createUser(createUser);
-
         return {
             user,
             message: 'Usuário cadastrado com sucesso!'

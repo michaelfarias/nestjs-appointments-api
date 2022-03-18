@@ -11,14 +11,31 @@ export class UserRepository extends Repository<User>{
         createUserDto: CreateUserDto,
         role: UserRole
     ): Promise<User> {
-        const { name, email, telephone, address, password, commitments, friends } = createUserDto;
+        const { name, email, telephone,
+            street,
+            district,
+            code,
+            city,
+            state,
+            number,
+            complement
+            , password, commitments, friends
+        } = createUserDto;
 
         const user = this.create();
         user.name = name;
         user.email = email;
         user.role = role;
         user.telephone = telephone;
-        user.address = address;
+        user.address = {
+            street,
+            district,
+            code,
+            city,
+            state,
+            number,
+            complement
+        }
         user.password = password;
         user.commitments = commitments;
         // user.friends = friends;

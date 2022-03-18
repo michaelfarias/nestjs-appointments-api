@@ -1,22 +1,22 @@
 <html>
 
 <body>
-    <form action="/cadastrar" method="post">
-        Name: <input type="text" value="{{name}}" disabled /></br>
-        Email: <input type="text" value="{{email}}" disabled /></br>
-        Telefone: <input type="text" name="name" /></br>
+    <form action="/users" method="POST">
+        Name: <input type="text" value="{{name}}" name="name" readonly /></br>
+        Email: <input type="text" value="{{email}}" name="email" readonly /></br>
+        Telephone: <input type="text" name="telephone" required /></br>
 
-        Rua: <input type="text" name="name" /></br>
-        Bairro: <input type="text" /></br>
-        Cep: <input type="text" name="cep" /></br>
-        Estado:<input type="text" name="estado" /></br>
-        Cidade: <input type="text" name="cidade" /></br>
-        Número:<input type="text" name="numero" /></br>
-        Complemento:<input type="text" name="complemento" /></br>
+        Street: <input type="text" name="street" required /></br>
+        District: <input type="text" name="district" required /></br>
+        Code: <input type="text" name="code" required /></br>
+        City:<input type="text" name="city" required /></br>
+        State: <input type="text" name="state" required /></br>
+        Number:<input type="number" name="number" required /></br>
+        Complement:<input type="text" name="complement" required /></br>
 
-        Senha: <input type="password" name="name" /></br>
+        Password: <input type="password" name="password" required /></br>
 
-        <button type="submit">Cadastrar</button>
+        <button type="submit">REGISTER</button>
     </form>
 </body>
 
