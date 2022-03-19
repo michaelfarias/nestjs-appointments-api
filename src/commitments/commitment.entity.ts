@@ -9,11 +9,14 @@ export class Commitment extends BaseEntity {
 
     // @Column()
     // date: Date;
-    @Column({ type: 'time' })
-    time_only: string;
+    // @Column({ type: 'time' })
+    // time_only: string;
 
-    @Column({ type: 'date' })
-    date_only: string;
+    // @Column({ type: 'date' })
+    // date_only: string;
+
+    @Column()
+    date_time: Date;
 
     @Column()
     description: string;

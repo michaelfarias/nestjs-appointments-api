@@ -3,6 +3,7 @@ import { InternalServerErrorException } from "@nestjs/common";
 import { Commitment } from "./commitment.entity";
 import { CreateCommitmentDto } from './dto/create-commitment.dto';
 import { UpdateCommitmentDto } from "./dto/update-commitment.dto";
+import * as moment from "moment";
 
 @EntityRepository(Commitment)
 export class CommitmentRepository extends Repository<Commitment>{
@@ -12,20 +13,17 @@ export class CommitmentRepository extends Repository<Commitment>{
     ): Promise<Commitment> {
         const commitment = this.create();
         commitment.description = createCommitmentDto.description;
-        // commitment.date = new Date();
-        commitment.time_only = "16:28:";
-        commitment.date_only = "2022-08-03";
+        commitment.date_time = new Date(moment(createCommitmentDto.date, 'DD-MM-YYYY', true).format());
+        commitment.date_time.setHours(Number.parseInt(createCommitmentDto.time.substr(0, 2)));
+        commitment.date_time.setMinutes(Number.parseInt(createCommitmentDto.time.substr(3, 4)));
         commitment.place = "Local";
         commitment.email_people_involved = ['alsd@gmail.com', 'laksdla@hotmail.com']
         commitment.user = createCommitmentDto.user;
-        // console.log(new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC' }))
-        const now = new Date()
-        now.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-        now.setDate(now.getDate() - createCommitmentDto.reminder.days_before);
-        now.setHours(now.getHours() - createCommitmentDto.reminder.hours_before);
-        now.setSeconds(0)
-        now.setMilliseconds(0)
-        commitment.reminder = now
+        commitment.date_time.setDate(commitment.date_time.getDate() - createCommitmentDto.reminder.days_before);
+        commitment.date_time.setHours(commitment.date_time.getHours() - createCommitmentDto.reminder.hours_before);
+        commitment.date_time.setSeconds(0)
+        commitment.date_time.setMilliseconds(0)
+        commitment.reminder = commitment.date_time
 
         try {
             await commitment.save();
@@ -42,35 +40,40 @@ export class CommitmentRepository extends Repository<Commitment>{
     async findCommitment(userId, from, time_from, to, time_to) {
 
         const commitments = this.createQueryBuilder("commitment")
-        console.log(from, time_from, to, time_to)
+
         if (from && to) {
             console.log("between")
+
+            const date_time_from = new Date(moment(from.concat(' ', time_from), 'DD-MM-YYYY HH:mm', true).format())
+            const date_time_to = new Date(moment(to.concat(' ', time_to), 'DD-MM-YYYY HH:mm', true).format())
+
             return await commitments
-                .where('commitment.time_only >= :time_from', { time_from: time_from })
-                .andWhere('commitment.date_only >= :date_from', { date_from: from })
-                .andWhere('commitment.time_only <= :time_to', { time_to: time_to })
-                .andWhere('commitment.date_only <= :date_to', { date_to: to })
+                .where('commitment.date_time BETWEEN :date_time_from AND :date_time_to', { date_time_from, date_time_to })
+                .andWhere('commitment.user.id = :id', { id: userId })
                 .getMany()
         }
 
         else if (from && !to) {
             console.log("desde")
+            const date_time = new Date(moment(from.concat(' ', time_from), 'DD-MM-YYYY HH:mm', true).format())
+
             return await commitments
-                .where('commitment.time_only >= :time_from', { time_from: time_from })
-                .andWhere('commitment.date_only >= :date_from', { date_from: from })
+                .where('commitment.date_time >= :date_time', { date_time })
+                .andWhere('commitment.user.id = :id', { id: userId })
                 .getMany();
         }
 
         else if (to && !from) {
+
+            const date_time = new Date(moment(to.concat(' ', time_to), 'DD-MM-YYYY HH:mm', true).format())
+
             return await commitments
-                .where('commitment.time_only <= :time_to', { time_to: time_to })
-                .andWhere('commitment.date_only <= :date_to', { date_to: to })
+                .where('commitment.date_time <= :date_time', { date_time })
+                .andWhere('commitment.user.id = :id', { id: userId })
                 .getMany();
         }
         else {
-
             return await commitments.where('commitment.user.id = :id', { id: userId }).getMany()
-
         }
     }
 

@@ -31,8 +31,8 @@ export class CommitmentsService {
         const { description, date, email_people_involved, place } = updateCommitmentDto;
 
         commitment.description = description ? description : commitment.description;
-        commitment.time_only = date ? "16:28:21.45" : commitment.time_only;
-        commitment.date_only = date ? "05-03-2022" : commitment.date_only;
+        // commitment.time_only = date ? "16:28:21.45" : commitment.time_only;
+        // commitment.date_only = date ? "05-03-2022" : commitment.date_only;
         commitment.email_people_involved =
             email_people_involved ?
                 email_people_involved : commitment.email_people_involved;
