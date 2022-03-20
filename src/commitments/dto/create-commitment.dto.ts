@@ -5,6 +5,8 @@ export class CreateCommitmentDto {
     user: User;
     date: string;
     time: string;
+    place: string;
+    email_people_involved: [];
 
     reminder: {
         days_before: number,

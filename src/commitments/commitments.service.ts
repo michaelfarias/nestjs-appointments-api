@@ -31,15 +31,15 @@ export class CommitmentsService {
         const { description, date, email_people_involved, place } = updateCommitmentDto;
 
         commitment.description = description ? description : commitment.description;
-        // commitment.time_only = date ? "16:28:21.45" : commitment.time_only;
-        // commitment.date_only = date ? "05-03-2022" : commitment.date_only;
+        commitment.place = place ? place : commitment.place;
+        
         commitment.email_people_involved =
             email_people_involved ?
                 email_people_involved : commitment.email_people_involved;
-        commitment.place = place ? place : commitment.place;
 
         try {
-            commitment.save()
+            commitment.save();
+
             return commitment;
         } catch (error) {
             throw new InternalServerErrorException('Erro ao atualizar os dados');
@@ -53,7 +53,6 @@ export class CommitmentsService {
         if (result.affected === 0)
             throw new NotFoundException('Não foi possivel deletar o compromisso com ID informado');
     }
-
 
     async findCommitmentsByUserId(userId) {
         return await this.commitmentRepository.findCommitmentsByUserId(userId);

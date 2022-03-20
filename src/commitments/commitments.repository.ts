@@ -1,4 +1,4 @@
-import { Repository, EntityRepository, Brackets } from "typeorm";
+import { Repository, EntityRepository } from "typeorm";
 import { InternalServerErrorException } from "@nestjs/common";
 import { Commitment } from "./commitment.entity";
 import { CreateCommitmentDto } from './dto/create-commitment.dto';
@@ -13,17 +13,26 @@ export class CommitmentRepository extends Repository<Commitment>{
     ): Promise<Commitment> {
         const commitment = this.create();
         commitment.description = createCommitmentDto.description;
+        commitment.user = createCommitmentDto.user;
+        commitment.place = createCommitmentDto.place;
+        commitment.email_people_involved = createCommitmentDto.email_people_involved
+
         commitment.date_time = new Date(moment(createCommitmentDto.date, 'DD-MM-YYYY', true).format());
         commitment.date_time.setHours(Number.parseInt(createCommitmentDto.time.substr(0, 2)));
         commitment.date_time.setMinutes(Number.parseInt(createCommitmentDto.time.substr(3, 4)));
-        commitment.place = "Local";
-        commitment.email_people_involved = ['alsd@gmail.com', 'laksdla@hotmail.com']
-        commitment.user = createCommitmentDto.user;
-        commitment.date_time.setDate(commitment.date_time.getDate() - createCommitmentDto.reminder.days_before);
-        commitment.date_time.setHours(commitment.date_time.getHours() - createCommitmentDto.reminder.hours_before);
-        commitment.date_time.setSeconds(0)
-        commitment.date_time.setMilliseconds(0)
-        commitment.reminder = commitment.date_time
+
+        if (createCommitmentDto.reminder.days_before > 0
+            ||
+            createCommitmentDto.reminder.hours_before > 0) {
+
+            const reminder = new Date(commitment.date_time)
+            reminder.setDate(reminder.getDate() - createCommitmentDto.reminder.days_before);
+            reminder.setHours(reminder.getHours() - createCommitmentDto.reminder.hours_before);
+            reminder.setSeconds(0)
+            reminder.setMilliseconds(0)
+
+            commitment.reminder = reminder
+        }
 
         try {
             await commitment.save();
