@@ -4,6 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import { ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { CredentialsDto } from '../auth/dto/credentials.dto';
+import * as bcrypt from 'bcrypt';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User>{
@@ -19,7 +21,7 @@ export class UserRepository extends Repository<User>{
             state,
             number,
             complement
-            , password, commitments, friends
+            , password, commitments
         } = createUserDto;
 
         const user = this.create();
@@ -36,9 +38,9 @@ export class UserRepository extends Repository<User>{
             number,
             complement
         }
-        user.password = password;
+        user.salt = await bcrypt.genSalt();
+        user.password = await this.hashPassword(password, user.salt)
         user.commitments = commitments;
-        // user.friends = friends;
 
         try {
             await user.save();
@@ -90,5 +92,21 @@ export class UserRepository extends Repository<User>{
 
         if (result.affected === 0)
             throw new NotFoundException('Não foi encontrado o usuário com o ID informado');
+    }
+
+    async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
+        const { email, password } = credentialsDto;
+        const user = await this.findOne({ email });
+
+        if (user && (await user.checkPassword(password))) {
+            return null;
+        }
+        else {
+            return null;
+        }
+    }
+
+    private async hashPassword(password: string, salt: string): Promise<string> {
+        return bcrypt.hash(password, salt);
     }
 }
