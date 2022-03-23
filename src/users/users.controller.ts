@@ -1,4 +1,17 @@
-import { Controller, Post, Body, Get, Param, Put, Delete, Query, NotFoundException, Render } from '@nestjs/common';
+import {
+    Controller,
+    Post,
+    Body,
+    Get,
+    Param,
+    Put,
+    Delete,
+    Query,
+    NotFoundException,
+    Render,
+    ValidationPipe,
+    UseGuards
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ReturnUserDto } from './dto/return-user.dto';
@@ -7,6 +20,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FriendsRepository } from 'src/friends/friends.repository';
 import { CommitmentsService } from 'src/commitments/commitments.service';
 import { SendgridService } from 'src/sendgrid/sendgrid.service';
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('users')
 export class UsersController {
@@ -27,8 +41,9 @@ export class UsersController {
     }
 
     @Post('admin')
+    @UseGuards(AuthGuard())
     async createAdminUser(
-        @Body() createUserDto: CreateUserDto,
+        @Body(ValidationPipe) createUserDto: CreateUserDto,
     ): Promise<ReturnUserDto> {
 
         const admin = await this.usersService.createAdminUser(createUserDto);

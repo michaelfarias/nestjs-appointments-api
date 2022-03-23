@@ -7,9 +7,12 @@ import { FriendsRepository } from 'src/friends/friends.repository';
 import { CommitmentsService } from 'src/commitments/commitments.service';
 import { CommitmentRepository } from 'src/commitments/commitments.repository';
 import { SendgridService } from 'src/sendgrid/sendgrid.service';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([UserRepository, FriendsRepository, CommitmentRepository])],
+    imports: [TypeOrmModule.forFeature([UserRepository, FriendsRepository, CommitmentRepository]),
+    PassportModule.register({ defaultStrategy: 'jwt' })
+    ],
     providers: [UsersService, CommitmentsService, SendgridService],
     controllers: [UsersController],
 })
