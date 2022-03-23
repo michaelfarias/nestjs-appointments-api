@@ -1,6 +1,7 @@
 import {
     Entity,
     BaseEntity,
+    Unique,
     PrimaryGeneratedColumn,
     Column,
     OneToMany,
@@ -10,6 +11,7 @@ import { Address } from './address';
 import * as bcrypt from 'bcrypt';
 
 @Entity()
+@Unique(['email'])
 export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
