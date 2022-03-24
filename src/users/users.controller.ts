@@ -21,7 +21,7 @@ import { FriendsRepository } from 'src/friends/friends.repository';
 import { CommitmentsService } from 'src/commitments/commitments.service';
 import { SendgridService } from 'src/sendgrid/sendgrid.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Role } from '../auth/role.decorator';
+import { Roles } from '../auth/role.decorator';
 import { UserRole } from './user-roles.enum';
 import { RolesGuard } from 'src/auth/roles.guard';
 
@@ -45,7 +45,7 @@ export class UsersController {
     }
 
     @Post('admin')
-    @Role(UserRole.ADMIN)
+    @Roles([UserRole.ADMIN])
     async createAdminUser(
         @Body(ValidationPipe) createUserDto: CreateUserDto,
     ): Promise<ReturnUserDto> {
@@ -58,6 +58,7 @@ export class UsersController {
     }
 
     @Post('pre_registration')
+    @Roles([UserRole.ADMIN])
     async pre_registration(@Body() createUserDto: CreateUserDto) {
         const { name, email } = createUserDto;
 
@@ -106,6 +107,7 @@ export class UsersController {
     }
 
     @Delete(':id')
+    @Roles([UserRole.ADMIN])
     async deleteUser(@Param('id') userId: string) {
         await this.usersService.deleteUser(userId);
 
