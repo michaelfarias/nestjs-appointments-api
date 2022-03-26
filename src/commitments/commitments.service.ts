@@ -1,4 +1,4 @@
-import { Injectable,NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommitmentRepository } from './commitments.repository';
 import { CreateCommitmentDto } from './dto/create-commitment.dto';
@@ -27,6 +27,10 @@ export class CommitmentsService {
         return await this.commitmentRepository.findCommitmentById(id);
     }
 
+    async findPublicAppointments() {
+        return await this.commitmentRepository.findPublicAppointments();
+    }
+
     async updateCommitment(userId, updateCommitmentDto: UpdateCommitmentDto, id: string) {
         const commitment = await this.findCommitmentById(id);
 
@@ -34,6 +38,7 @@ export class CommitmentsService {
 
         commitment.description = description ? description : commitment.description;
         commitment.place = place ? place : commitment.place;
+        commitment.public = updateCommitmentDto.public ? updateCommitmentDto.public : commitment.public
 
         commitment.email_people_involved =
             email_people_involved ?
@@ -56,7 +61,7 @@ export class CommitmentsService {
 
             commitment.reminder = new_reminder
         }
-
+        console.log(commitment)
         try {
             const result = await this.commitmentRepository.updateCommitment(userId, commitment, id)
 

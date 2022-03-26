@@ -24,4 +24,8 @@ export class Commitment extends BaseEntity {
 
     @Column("text", { array: true, nullable: true },)
     email_people_involved: string[];
+
+    @Column("boolean")
+    public: boolean = false
+
 }

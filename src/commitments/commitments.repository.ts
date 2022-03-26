@@ -15,6 +15,7 @@ export class CommitmentRepository extends Repository<Commitment>{
         commitment.user = createCommitmentDto.user;
         commitment.place = createCommitmentDto.place;
         commitment.email_people_involved = createCommitmentDto.email_people_involved
+        commitment.public = createCommitmentDto.public
 
         commitment.date_time = new Date(moment(createCommitmentDto.date, 'DD-MM-YYYY', true).format());
         commitment.date_time.setHours(Number.parseInt(createCommitmentDto.time.substr(0, 2)));
@@ -101,6 +102,19 @@ export class CommitmentRepository extends Repository<Commitment>{
         return query;
     }
 
+    async findCommitmentsByUserId(userId) {
+        const commitments = await this.createQueryBuilder('commitment')
+            .where('commitment.user.id = :id', { id: userId })
+            .getMany();
+
+        return commitments;
+    }
+
+    async findPublicAppointments() {
+        return await this.createQueryBuilder('commitment')
+            .where('commitment.public = true').getMany();
+    }
+
     async updateCommitment(userId, commitment: Commitment, id) {
         return await this.createQueryBuilder()
             .update(Commitment)
@@ -108,14 +122,6 @@ export class CommitmentRepository extends Repository<Commitment>{
             .where('userId = :userId', { userId })
             .andWhere('id = :id', { id })
             .execute()
-    }
-
-    async findCommitmentsByUserId(userId) {
-        const commitments = await this.createQueryBuilder('commitment')
-            .where('commitment.user.id = :id', { id: userId })
-            .getMany();
-
-        return commitments;
     }
 
     async deleteCommitment(userId: number, id: number) {

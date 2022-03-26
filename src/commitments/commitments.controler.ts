@@ -49,7 +49,7 @@ export class CommitmentsController {
     @Get('publics')
     @Roles([UserRole.USER])
     async findCommitments() {
-        return "ola"
+        return this.commitmentsService.findPublicAppointments();
     }
 
     @Put(':id')

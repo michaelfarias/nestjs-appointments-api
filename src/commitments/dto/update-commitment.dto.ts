@@ -4,6 +4,7 @@ export class UpdateCommitmentDto {
     time: string;
     place: string;
     email_people_involved: [];
+    public: boolean;
 
     reminder: {
         days_before: number,
