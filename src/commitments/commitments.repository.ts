@@ -1,8 +1,7 @@
 import { Repository, EntityRepository } from "typeorm";
-import { InternalServerErrorException } from "@nestjs/common";
+import { InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Commitment } from "./commitment.entity";
 import { CreateCommitmentDto } from './dto/create-commitment.dto';
-import { UpdateCommitmentDto } from "./dto/update-commitment.dto";
 import * as moment from "moment";
 
 @EntityRepository(Commitment)
@@ -90,7 +89,7 @@ export class CommitmentRepository extends Repository<Commitment>{
         const commitment = await this.findOne(id);
 
         if (commitment === undefined)
-            throw new InternalServerErrorException('Compromisso não encontrado')
+            throw new NotFoundException('Compromisso não encontrado')
 
         return commitment;
     }
@@ -102,9 +101,13 @@ export class CommitmentRepository extends Repository<Commitment>{
         return query;
     }
 
-    async updateCommitment(updateCommitmentDto: UpdateCommitmentDto) {
-
-        return await this.save(updateCommitmentDto);
+    async updateCommitment(userId, commitment: Commitment, id) {
+        return await this.createQueryBuilder()
+            .update(Commitment)
+            .set(commitment)
+            .where('userId = :userId', { userId })
+            .andWhere('id = :id', { id })
+            .execute()
     }
 
     async findCommitmentsByUserId(userId) {
@@ -113,5 +116,14 @@ export class CommitmentRepository extends Repository<Commitment>{
             .getMany();
 
         return commitments;
+    }
+
+    async deleteCommitment(userId: number, id: number) {
+        return await this.createQueryBuilder()
+            .delete()
+            .from(Commitment)
+            .where('id = :id ', { id })
+            .andWhere('userId = :userId', { userId })
+            .execute();
     }
 }

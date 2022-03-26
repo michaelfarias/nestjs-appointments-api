@@ -7,6 +7,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../auth/role.decorator';
 import { UserRole } from '../users/user-roles.enum';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { GetUser } from "src/auth/get-user.decorator";
+import { User } from '../users/user.entity';
 
 @Controller('commitments')
 @UseGuards(AuthGuard(), RolesGuard)
@@ -31,7 +33,7 @@ export class CommitmentsController {
             html: '<h1>Hello</h1>'
         };
 
-        await this.sendgridService.send(mail)
+        // await this.sendgridService.send(mail)
 
         return commitment;
     }
@@ -39,30 +41,32 @@ export class CommitmentsController {
     @Get()
     @Roles([UserRole.USER])
     async findCommitment(
-        @Query("id") idUser, @Query('from') from, @Query("to") to, @Query("time_to") time_to, @Query("time_from") time_from
+        @GetUser() user: User, @Query('from') from, @Query("to") to, @Query("time_to") time_to, @Query("time_from") time_from
     ) {
-        return this.commitmentsService.findCommitment(idUser, from, time_from, to, time_to);
+        return this.commitmentsService.findCommitment(user.id, from, time_from, to, time_to);
     }
 
-    @Get(':id')
+    @Get('publics')
     @Roles([UserRole.USER])
-    async findCommitmentById(@Param('id') id) {
-        return this.commitmentsService.findCommitmentById(id);
+    async findCommitments() {
+        return "ola"
     }
 
     @Put(':id')
     @Roles([UserRole.USER])
     async updateCommitment(
+        @GetUser() user: User,
         @Param('id') id,
         @Body() updateCommitmentDto: UpdateCommitmentDto
     ) {
-        return this.commitmentsService.updateCommitment(updateCommitmentDto, id);
+        return this.commitmentsService.updateCommitment(user.id, updateCommitmentDto, id);
     }
 
     @Delete(':id')
     @Roles([UserRole.USER])
-    async deleteCommitment(@Param('id') id) {
-        await this.commitmentsService.deleteCommitment(id);
+    async deleteCommitment(@GetUser() user: User, @Param('id') id) {
+
+        await this.commitmentsService.deleteCommitment(user.id, id);
 
         return {
             message: "Compromisso deletado com sucesso."

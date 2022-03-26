@@ -1,9 +1,12 @@
 export class UpdateCommitmentDto {
-    date: string;
-
     description: string;
-
+    date: string;
+    time: string;
     place: string;
+    email_people_involved: [];
 
-    email_people_involved: string[];
+    reminder: {
+        days_before: number,
+        hours_before: number
+    }
 }
