@@ -61,7 +61,7 @@ export class CommitmentsService {
 
             commitment.reminder = new_reminder
         }
-        console.log(commitment)
+
         try {
             const result = await this.commitmentRepository.updateCommitment(userId, commitment, id)
 

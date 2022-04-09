@@ -8,12 +8,13 @@ import { CommitmentsService } from 'src/commitments/commitments.service';
 import { CommitmentRepository } from 'src/commitments/commitments.repository';
 import { SendgridService } from 'src/sendgrid/sendgrid.service';
 import { PassportModule } from '@nestjs/passport';
+import { NewUserController } from './new_user.controller';
 
 @Module({
     imports: [TypeOrmModule.forFeature([UserRepository, FriendsRepository, CommitmentRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' })
     ],
     providers: [UsersService, CommitmentsService, SendgridService],
-    controllers: [UsersController],
+    controllers: [UsersController, NewUserController],
 })
 export class UsersModule { }
