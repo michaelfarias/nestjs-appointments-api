@@ -24,13 +24,20 @@ export class CommitmentsController {
         @Body() createCommitmentDto: CreateCommitmentDto,
     ) {
         const commitment = await this.commitmentsService.createCommitment(createCommitmentDto);
+        const { email_people_involved, description, date_time, place, user } = commitment
+        email_people_involved.push(user.email)
 
         const mail = {
-            to: 'michaelfarias@alu.ufc.br',
-            from: 'michaelfarias@alu.ufc.br',
-            subject: 'Hello from sendgrid',
-            text: 'Hello',
-            html: '<h1>Hello</h1>'
+            to: email_people_involved,
+            from: 'noreply@application.com',
+            subject: `Appointment Scheduled`,
+            text: 'Appointment Invitation',
+            html: '<body>' +
+                `<h3>Appointment Date: ${date_time}</h3></br>` +
+                `<h3>Appointment Description: ${description}</h3></br>` +
+                `<h3>Place: ${place}</h3></br>` +
+                `<h3>People Involved: ${email_people_involved}</h3></br>` +
+                '</body>'
         };
 
         // await this.sendgridService.send(mail)

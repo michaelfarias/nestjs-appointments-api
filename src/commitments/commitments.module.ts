@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommitmentRepository } from './commitments.repository'
 import { CommitmentsService } from './commitments.service';
-import { CommitmentsController } from './commitments.controler';
+import { CommitmentsController } from './commitments.controller';
 import { SendgridService } from 'src/sendgrid/sendgrid.service';
 import { PassportModule } from '@nestjs/passport';
 
