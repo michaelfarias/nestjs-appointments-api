@@ -24,6 +24,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../auth/role.decorator';
 import { UserRole } from './user-roles.enum';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { GetUser } from '../auth/get-user.decorator';
 
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
@@ -117,9 +118,10 @@ export class UsersController {
     }
 
     @Get('consult_user_schedule/:id')
-    async consultUserSchedule(@Param('id') id, @Query('requestedUserId') requestedUserId) {
+    @Roles([UserRole.USER])
+    async consultUserSchedule(@GetUser() user, @Param('id') requestedUserId) {
 
-        const friends = await this.friendsRepository.findFriedship(id, requestedUserId);
+        const friends = await this.friendsRepository.findFriedship(user.id, requestedUserId);
 
         if (friends) {
 
