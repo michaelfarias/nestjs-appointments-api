@@ -10,9 +10,12 @@ export class SendgridService {
     }
 
     async send(mail: SendGrid.MailDataRequired) {
-
-        const transport = await SendGrid.send(mail);
-        console.log(`Email enviado para ${mail.to}`)
-        return transport;
+        try {
+            const transport = await SendGrid.send(mail);
+            console.log(`Email enviado para ${mail.to}`)
+            return transport;
+        } catch (error) {
+            console.log(error)
+        }
     }
 }

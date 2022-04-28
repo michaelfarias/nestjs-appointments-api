@@ -30,7 +30,7 @@ export class TaskService {
 
             const mail = {
                 to: email_people_involved,
-                from: 'noreply@application.com',
+                from: 'michaelfarias@alu.ufc.br',
                 subject: 'REMINDER',
                 text: 'Appointment Reminder',
                 html: '<body>' +
@@ -41,10 +41,7 @@ export class TaskService {
                     '</body>'
             };
 
-            // await this.sendgridService.send(mail)
-
-            console.log(email_people_involved, commitment)
-            console.log('######################################')
+            await this.sendgridService.send(mail)
         });
     }
 }
