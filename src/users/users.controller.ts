@@ -65,13 +65,13 @@ export class UsersController {
 
         const mail = {
             to: `${email}`,
-            from: 'noreply@application.com',
+            from: 'michaelfarias@alu.ufc.br',
             subject: 'Complete Your Registration',
             text: 'Click on the link',
             html: `<a href='http://localhost:3000/new_user/page/?name=${name}&email=${email}'>Finalize registration.</a>`
         };
 
-        // await this.sendgridService.send(mail)    
+        await this.sendgridService.send(mail)
 
         return {
             message: "Foi enviado um email com link para finalizar o cadastro"

@@ -21,15 +21,17 @@ export class CommitmentsController {
     @Post()
     @Roles([UserRole.USER])
     async createCommitment(
+        @GetUser() user: User,
         @Body() createCommitmentDto: CreateCommitmentDto,
     ) {
+        createCommitmentDto.user = user
         const commitment = await this.commitmentsService.createCommitment(createCommitmentDto);
-        const { email_people_involved, description, date_time, place, user } = commitment
+        const { email_people_involved, description, date_time, place } = commitment
         email_people_involved.push(user.email)
 
         const mail = {
             to: email_people_involved,
-            from: 'noreply@application.com',
+            from: 'michaelfarias@alu.ufc.br',
             subject: `Appointment Scheduled`,
             text: 'Appointment Invitation',
             html: '<body>' +
@@ -40,7 +42,7 @@ export class CommitmentsController {
                 '</body>'
         };
 
-        // await this.sendgridService.send(mail)
+        await this.sendgridService.send(mail)
 
         return commitment;
     }

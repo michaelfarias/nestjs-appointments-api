@@ -12,7 +12,7 @@ export class FriendsService {
     ) { }
 
     async createFriendship(userIdRequester, userIdRequested) {
-        const friendship = this.friendRepository.createFriendship(userIdRequester, userIdRequested)
+        const friendship = await this.friendRepository.createFriendship(userIdRequester, userIdRequested)
 
         return {
             friendship,
